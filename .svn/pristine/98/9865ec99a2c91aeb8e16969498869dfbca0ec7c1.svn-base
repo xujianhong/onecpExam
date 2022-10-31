@@ -1,0 +1,40 @@
+package org.daomingedu.onecpexam.http;
+
+public class URLS {
+
+
+
+    public static void setBASEURL(String BASEURL) {
+        URLS.BASEURL = BASEURL;
+    }
+
+    public static String generateUrl(String url) {
+        return BASEURL + url;
+    }
+
+    //基本请求地址
+    public static String BASEURL = "http://www.daomingedu.com/";
+
+
+
+    //登陆地址
+    public static final String LOGIN = "api/exams/teacherLogin.do";
+
+    public static final String SAVE_TEST_RESULT ="api/exams/saveTestResult.do";
+
+    //获取评语
+    public static final String GET_COMMENT = "api/exams/queryCommentList.do";
+
+    //教师考试列表
+    public static final String TEACHER_TEST_ROOM_LIST = "api/exams/teacherTestRoomList.do";
+
+    public static final String TEST_ROOM_STUDENT_INFO_LIST = "api/exams/testRoomStudentInfoList.do";
+
+    public static final String QUERY_STUDENT_TEST_INFO = "api/exams/queryStudentTestInfo.do";
+
+    public static final String SEARCHTEACHERTESTLIST = "api/exams/searchTeacherTestList.do";
+
+
+    public static final String GET_VERSION_INFO = "api/exams/getVersionInfo.do";
+
+}

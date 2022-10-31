@@ -1,0 +1,171 @@
+package org.daomingedu.onecpexam.ui;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+
+
+import org.daomingedu.onecpexam.R;
+import org.daomingedu.onecpexam.base.BaseBackAct;
+import org.daomingedu.onecpexam.base.Constant;
+import org.daomingedu.onecpexam.base.MyApp;
+import org.daomingedu.onecpexam.bean.Teacher;
+import org.daomingedu.onecpexam.bean.TestRoom;
+import org.daomingedu.onecpexam.bean.TestRoomStudent;
+import org.daomingedu.onecpexam.http.Api;
+import org.daomingedu.onecpexam.http.ListCallback;
+import org.daomingedu.onecpexam.http.URLS;
+import org.daomingedu.onecpexam.ui.adapter.StudentListAdapter;
+import org.daomingedu.onecpexam.view.pop.PopSelectFilter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import static org.daomingedu.onecpexam.http.URLS.TEST_ROOM_STUDENT_INFO_LIST;
+
+
+/**
+ * Created by qin.
+ */
+
+public class StudentListActivity extends BaseBackAct implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+
+    private TestRoom testRoom;
+    private ListView listView;
+    private BaseAdapter adapter;
+    private final Teacher teacher = MyApp.getTeacher();
+    private SwipeRefreshLayout pull_refresh;
+    private List<TestRoomStudent> data = new ArrayList<>();
+    private Button btn_filter;
+    private String currentState = "-1";//
+    private PopSelectFilter pop;
+    private int clickPosition;
+    private TestRoomStudent testRoomStudent;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View rootView = View.inflate(this, R.layout.act_student_list, null);
+        setContentView(rootView);
+        addNavBtn();
+        setTitle("我的考生");
+        testRoom = (TestRoom) getIntent().getSerializableExtra(Constant.ROOM_ID_EXTRA);
+
+        initViews();
+        onRefresh();
+    }
+
+    private void initViews() {
+        listView = (ListView) findViewById(R.id.list_view);
+        listView.setAdapter(adapter = new StudentListAdapter(this, data));
+        pull_refresh = (SwipeRefreshLayout) findViewById(R.id.pull_refresh);
+        pull_refresh.setOnRefreshListener(this);
+        btn_filter = (Button) findViewById(R.id.btn_filter);
+        btn_filter.setOnClickListener(this);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.TEST_SIGN_EXTRA, filterStudent(currentState).get(position).getTestSignId());
+                bd.jump(StuInfoActivity.class,bundle);
+            }
+        });
+    }
+
+
+    @Override
+    public void onRefresh() {
+
+        new Api(this, URLS.generateUrl(TEST_ROOM_STUDENT_INFO_LIST))
+                .add("sessionId", teacher.getSessionId())
+                .add("testId", testRoom.getTestId())
+                .add("schoolId", testRoom.getSchoolId())
+                .add("gradeNo", testRoom.getGradeNo() + "")
+                .add("classesNo", testRoom.getClassesNo() + "")
+                .post(new ListCallback<TestRoomStudent>() {
+                    @Override
+                    public void onSuccess(List<TestRoomStudent> list) {
+                        pull_refresh.setRefreshing(false);
+                        data.clear();
+                        data.addAll(list);
+                        adapter = new StudentListAdapter(StudentListActivity.this, filterStudent(currentState));
+                        listView.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onError(Throwable ex) {
+                        super.onError(ex);
+                        pull_refresh.setRefreshing(false);
+                    }
+                });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_filter:
+                pop = new PopSelectFilter(this, this);
+                pop.showAsDropDown(btn_filter);
+                break;
+            case R.id.btn_sub:
+                btn_filter.setText(((Button) v).getText());
+                currentState = "2";
+                listView.setAdapter(new StudentListAdapter(StudentListActivity.this, filterStudent(currentState)));
+                pop.dismiss();
+                break;
+            case R.id.btn_not_sub:
+                btn_filter.setText(((Button) v).getText());
+                currentState = "1";
+                listView.setAdapter(new StudentListAdapter(StudentListActivity.this, filterStudent(currentState)));
+                pop.dismiss();
+                break;
+            case R.id.btn_not_test:
+                btn_filter.setText(((Button) v).getText());
+                currentState = "0";
+                listView.setAdapter(new StudentListAdapter(StudentListActivity.this, filterStudent(currentState)));
+                pop.dismiss();
+                break;
+            case R.id.btn_all:
+                btn_filter.setText(((Button) v).getText());
+                currentState = "-1";
+                listView.setAdapter(new StudentListAdapter(StudentListActivity.this, filterStudent(currentState)));
+                pop.dismiss();
+                break;
+        }
+    }
+
+    private List<TestRoomStudent> filterStudent(String state) {
+        if ("-1".equals(state)) return data;
+        List<TestRoomStudent> list = new ArrayList<>();
+        for (TestRoomStudent testRoomStudent : data) {
+            if (testRoomStudent.getStatus().equals(state)) {
+                list.add(testRoomStudent);
+            }
+        }
+        return list;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 0 && resultCode == RESULT_OK){
+//            testRoomStudent.getMajorList().get(clickPosition).setGrading(false);
+//            for (Major major : testRoomStudent.getMajorList()) {
+//                if (major.isGrading()){
+//                    return;
+//                }
+//            }
+//            bd.back();
+//        }
+    }
+
+}

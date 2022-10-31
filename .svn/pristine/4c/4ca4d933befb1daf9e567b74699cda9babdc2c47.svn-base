@@ -1,0 +1,44 @@
+package org.daomingedu.onecpexam.bean;
+
+/**
+ * Created by Administrator on 2017/1/12.
+ */
+
+public class SampleComment {
+    private String id;
+    private String testCommentTypeId;
+    private String content;
+    private int orderNo;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTestCommentTypeId() {
+        return testCommentTypeId;
+    }
+
+    public void setTestCommentTypeId(String testCommentTypeId) {
+        this.testCommentTypeId = testCommentTypeId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public int getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(int orderNo) {
+        this.orderNo = orderNo;
+    }
+}

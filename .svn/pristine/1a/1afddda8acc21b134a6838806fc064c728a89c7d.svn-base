@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_page_head" />
+
+    <org.cqmusician.exam.view.SampleCoverVideo
+        android:id="@+id/scv_player_sub_test"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="200dp"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_grade_config"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="考官评语"
+                            android:textColor="@color/black_34"
+                            android:textSize="@dimen/sub_test_font_big" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                       android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/gray_e7">
+                        <EditText
+                            android:focusableInTouchMode="true"
+                            android:id="@+id/et_attend_comment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/gray_e7"
+                            android:gravity="start"
+
+                            android:hint="手动码字太累了？也可以试试语音录入哟~"
+                            android:maxLength="500"
+                            android:minHeight="100dp"
+                            android:padding="10dp"
+                            android:textSize="@dimen/sub_test_font_small" />
+                        <ImageView
+                            android:id="@+id/iv_record"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:clickable="true"
+                            android:padding="15dp"
+                            android:src="@drawable/yy" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/tb_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:tabMode="scrollable"
+                            />
+                        <!--<Button-->
+                            <!--android:id="@+id/bt_sample"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="35dp"-->
+                            <!--android:layout_marginLeft="10dp"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:background="@color/colorPrimary"-->
+                            <!--android:drawableEnd="@drawable/arrow_down"-->
+                            <!--android:drawableRight="@drawable/arrow_down"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:textColor="@android:color/white"-->
+                            <!--android:textSize="@dimen/sub_test_font_small"-->
+                            <!--tools:text="音乐表现力" />-->
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/lv_sample"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+                    </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp">-->
+
+                <!--<View-->
+                    <!--android:layout_width="5dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/colorPrimary" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:text="考评项目"-->
+                    <!--android:textColor="@color/black_34"-->
+                    <!--android:textSize="@dimen/sub_test_font_big" />-->
+            <!--</LinearLayout>-->
+
+
+
+
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp">-->
+
+                <!--<View-->
+                    <!--android:layout_width="5dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/colorPrimary" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:text="评语模版"-->
+                    <!--android:textColor="@color/black_34"-->
+                    <!--android:textSize="@dimen/sub_test_font_big" />-->
+            <!--</LinearLayout>-->
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@android:color/white"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="最终评定"
+                        android:textColor="@color/black_34"
+                        android:textSize="@dimen/sub_test_font_big" />
+
+                    <LinearLayout
+                        android:id="@+id/act_sub_test_total_score_ll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="总分数"
+                            android:textColor="@color/black_34"
+                            android:textSize="@dimen/sub_test_font_big" />
+
+                        <TextView
+                            android:id="@+id/act_sub_test_total_score_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/bg_grey"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:text="00"
+                            android:textSize="@dimen/sub_test_font_big" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="以上所有项目分数的总和"
+                            android:textColor="@color/viewfinder_laser"
+                            android:textSize="@dimen/sub_test_font_big" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RadioGroup
+                    android:id="@+id/rg_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <RadioButton
+                        android:id="@+id/rb_perfect"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+
+                        android:drawableTop="@drawable/select_perfect"
+                        android:textColor="@color/black_1f" />
+
+                    <RadioButton
+                        android:id="@+id/rb_good"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:drawableTop="@drawable/select_good" />
+
+                    <RadioButton
+                        android:id="@+id/rb_pass"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:drawableTop="@drawable/select_pass" />
+
+                    <RadioButton
+                        android:id="@+id/rb_not_pass"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:drawableTop="@drawable/select_not_pass" />
+
+                    <RadioButton
+                        android:id="@+id/rb_get_up"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:drawableTop="@drawable/select_get_up" />
+
+                </RadioGroup>
+            </LinearLayout>
+            <Button
+                android:id="@+id/bt_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="80dp"
+                android:background="@drawable/button_base"
+                android:text="提交成绩"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/sub_test_font_big" />
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

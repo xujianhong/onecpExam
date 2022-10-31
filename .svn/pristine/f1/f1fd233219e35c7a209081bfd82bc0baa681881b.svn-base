@@ -1,0 +1,67 @@
+package org.cqmusician.exam.bean;
+
+import java.io.Serializable;
+
+/**
+ * Created by qin.
+ */
+
+public class Test  implements Serializable{
+    public static final int STATUS_DOING = 0; //考试进行中
+    public static final int STATUS_DONE = 1;//考试结束
+
+    private String name;
+    private String time;
+    private Integer status;
+    private String testId;
+    private Integer room_name;
+    private int isOnilne;//1为线上考级，其他为线下考级
+
+    public Integer getRoom_name() {
+        return room_name;
+    }
+
+    public void setRoom_name(Integer room_name) {
+        this.room_name = room_name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getTestId() {
+        return testId;
+    }
+
+    public void setTestId(String testId) {
+        this.testId = testId;
+    }
+
+    public int getIsOnilne() {
+        return isOnilne;
+    }
+
+    public void setIsOnilne(int isOnilne) {
+        this.isOnilne = isOnilne;
+    }
+}

@@ -1,0 +1,67 @@
+package org.cqmusician.exam.http;
+
+/**
+ *
+ * @author yushifei
+ *
+ * 2015-9-14
+ */
+public class SystemEnum {
+	 /**
+	 *返回状态码
+	 * @author yushifei
+	 * 2015-9-14
+	 */
+	public enum ResultCode {
+        /** 请求成功 */
+	 	SUCCESS {public String getName(){return "请求成功";}public int getVal(){return 100;}},
+        /** 参数错误 */
+        PARAMERROR {public String getName(){return "参数错误";}public int getVal(){return 201;}},
+        /** 系统异常 */
+        SYSTEMEXCEPTION {public String getName(){return "服务器异常";}public int getVal(){return 202;}},
+        /** 验证失败 */
+        AUTHFAILURE {public String getName(){return "无访问权限";}public int getVal(){return 400;}},
+        /** 验证失败 */
+        BUSINESSEXCEPTION {public String getName(){return "业务异常";}public int getVal(){return 203;}},
+		 /**登录超时*/
+		 LOGINTIMEOUT {public String getName(){return "登录超时";}public int getVal(){return 205;}};
+        
+        public abstract String getName();
+        public abstract int getVal();
+    }
+	public enum OrderState {
+		/**新建*/
+	 	CREATE {public String getName(){return "等待确认订单";}public int getVal(){return 0;}},
+	 	/**后台确认合同以及合同价格*/
+	 	BACKGROUND_AFFIRM {public String getName(){return "已确认订单";}public int getVal(){return 1;}},
+		/**后台确认合同以及合同价格*/
+	 	SURE_WATER {public String getName(){return "服务进行中";}public int getVal(){return 2;}},
+	 	  /** 已完成 */
+        FINISH {public String getName(){return "已完成";}public int getVal(){return 3;}};
+        public abstract String getName();
+        public abstract int getVal();
+        public static String getNameByVal(int i){
+        	String name="";
+        	switch (i) {
+			case 0:
+				name=CREATE.getName();
+				break;
+			case 1:
+				name=BACKGROUND_AFFIRM.getName();
+				break;
+			case 2:
+				name=SURE_WATER.getName();
+				break;
+			case 3:
+				name=FINISH.getName();
+				break;
+			default:
+				break;
+			}
+        	
+        	return name;
+        }
+        
+    }
+	
+}

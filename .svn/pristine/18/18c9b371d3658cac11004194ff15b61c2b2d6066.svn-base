@@ -1,0 +1,170 @@
+package org.cqmusician.exam.ui;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import org.cqmusician.exam.R;
+import org.cqmusician.exam.base.BaseBackAct;
+import org.cqmusician.exam.base.Constant;
+import org.cqmusician.exam.base.MyApp;
+import org.cqmusician.exam.bean.AdmissionInfo;
+import org.cqmusician.exam.bean.ExamInfo;
+import org.cqmusician.exam.bean.Major;
+import org.cqmusician.exam.bean.Student;
+import org.cqmusician.exam.bean.TestInfo;
+import org.cqmusician.exam.bean.TestMajorResultStudentInfo;
+import org.cqmusician.exam.http.Api;
+import org.cqmusician.exam.http.ObjCallback;
+import org.cqmusician.exam.http.URLS;
+import org.cqmusician.exam.ui.adapter.MajorLvlAdapter;
+import org.cqmusician.exam.utils.ConfigUtils;
+import org.cqmusician.exam.view.dialog.MyDialog;
+
+
+/**
+ * Created by Administrator on 2017/1/10.
+ */
+
+public class StuInfoAct extends BaseBackAct implements View.OnClickListener, AdapterView.OnItemClickListener {
+
+    private ExamInfo examInfo;
+    private MyDialog dialog;
+    private int clickPosition;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.act_stu_info);
+        setTitle("学生信息");
+        addNavBtn().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        examInfo = (ExamInfo) getIntent().getSerializableExtra("examInfo");
+        initView();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    private void initView() {
+        if (examInfo == null) return;
+        Student student = examInfo.getStudent();
+        AdmissionInfo admissionInfo = examInfo.getAdmissionInfo();
+        ImageView civ_head = (ImageView) findViewById(R.id.iv_head);
+        TextView tv_name = (TextView) findViewById(R.id.tv_name);
+        TextView tv_sex = (TextView) findViewById(R.id.tv_sex);
+        TextView tv_birthday = (TextView) findViewById(R.id.tv_birthday);
+        TextView tv_old_certificate = (TextView) findViewById(R.id.tv_old_certificate);
+        TextView tv_sign_major = (TextView) findViewById(R.id.tv_sign_major);
+        TextView tv_sign_major_lvl = (TextView) findViewById(R.id.tv_sign_major_lvl);
+        TextView tv_test_time = (TextView) findViewById(R.id.tv_test_time);
+        TextView tv_room_id = (TextView) findViewById(R.id.tv_room_id);
+        TextView tv_test_num = (TextView) findViewById(R.id.tv_test_num);
+        TextView tv_id_no = (TextView) findViewById(R.id.tv_id_no);
+        TextView tv_nation = (TextView) findViewById(R.id.tv_nation);
+        TextView tv_origin = (TextView) findViewById(R.id.tv_origin);
+        Button bt_begin_assessment = (Button) findViewById(R.id.bt_begin_assessment);
+        TextView tv_site_name = (TextView) findViewById(R.id.tv_site_name);
+        Glide.with(this).load(student.getPhotoImg()).into(civ_head);
+        tv_name.setText(student.getStudentName());
+        tv_sex.setText(student.getSex());
+        tv_birthday.setText(student.getBirthDay());
+        tv_id_no.setText(student.getIdentityCard());
+        tv_origin.setText(student.getNativePlace());
+        tv_nation.setText(student.getNationName());
+        tv_old_certificate.setText(examInfo.getMaxMajorLevel());
+        tv_sign_major.setText(examInfo.getMajorList().get(0).getMajorName());
+        tv_sign_major_lvl.setText(examInfo.getMajorLvlStr());
+        tv_test_time.setText(admissionInfo.getFormatTime());
+        tv_site_name.setText(admissionInfo.getSiteName());
+        tv_room_id.setText(admissionInfo.getRoomName());
+        tv_test_num.setText(admissionInfo.getTestNumber());
+
+        bt_begin_assessment.setOnClickListener(this);
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        dialog = new MyDialog(this);
+        dialog.setContentView(R.layout.dialog_choose_lvl);
+        ListView lv_lvl = (ListView) dialog.findViewById(R.id.lv_lvl);
+        lv_lvl.setAdapter(new MajorLvlAdapter(this,examInfo.getMajorList()));
+        lv_lvl.setOnItemClickListener(this);
+        dialog.show();
+
+    }
+
+    private void startTest(int index) {
+        Major major = examInfo.getMajorList().get(index);
+        Bundle bundle = getIntent().getExtras();
+        bundle.putString(SubTestAct.MAJOR_ID,major.getMajorId());
+        bundle.putString(SubTestAct.ID,major.getId());
+        bundle.putString(SubTestAct.TEST_MAJOR_RESULT_ID,major.getTestMajorResultId());
+        bd.jumpResult(SubTestAct.class, 0, bundle);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        /*if (examInfo.getMajorList().get(position).isGrading()) {
+            startTest(position);
+            dialog.dismiss();
+            clickPosition = position;
+        }else {
+            bd.toastFailed("已经打过成绩");
+        }*/
+        Major major = examInfo.getMajorList().get(position);
+        int isOnline = ConfigUtils.getInt(Constant.IS_ONLINE);
+        if (isOnline == 1 || !major.isGrading()){
+            dialog.dismiss();
+            String testMajorResultId = major.getTestMajorResultId();
+            String sessionId = MyApp.getTeacher().getSessionId();
+            new Api(StuInfoAct.this, URLS.generateUrl(URLS.TEST_MAJOR_RESULT_STUDENT_INFO))
+                    .add("testMajorResultId",testMajorResultId)
+                    .add("sessionId",sessionId)
+                    .post(new ObjCallback<TestMajorResultStudentInfo>() {
+                        @Override
+                        public void onSuccess(TestMajorResultStudentInfo obj) {
+                            Bundle bundle = getIntent().getExtras();
+                            if (bundle != null){
+                                bundle.putString(SubTestAct.MAJOR_ID,major.getMajorId());
+                                bundle.putString(SubTestAct.ID,major.getId());
+                                bundle.putString(SubTestAct.TEST_MAJOR_RESULT_ID,testMajorResultId);
+                                bundle.putParcelable(SubTestAct.DETAIL_INFO,obj);
+                                bd.jumpResult(SubTestAct.class, 0, bundle);
+                            }
+                        }
+                    },"正在获取考生成绩");
+        }else {
+            bd.toastFailed("还未打过成绩");
+        }
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK){
+            examInfo.getMajorList().get(clickPosition).setGrading(false);
+            for (Major major : examInfo.getMajorList()) {
+                if (major.isGrading()){
+                    return;
+                }
+            }
+            bd.back();
+        }
+    }
+}

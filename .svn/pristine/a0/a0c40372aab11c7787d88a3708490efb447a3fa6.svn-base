@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1da5cf</color>
+    <color name="colorPrimaryDark">#1a91b6</color>
+    <color name="colorAccent">#1da5cf</color>
+    <color name="gray_e7">#e7e7e7</color>
+    <color name="gray_33">#333333</color>
+    <color name="white_ccff">#9dffffff</color>
+    <color name="black_34">#343434</color>
+    <color name="white_f1">#f1f1f1</color>
+    <color name="black_9e">#9e9e9e</color>
+    <color name="white_f0">#f0f0f0</color>
+    <color name="green_1d">#1dce79</color>
+    <color name="yellow_cd">#cda61c</color>
+    <color name="black_9f">#9f9f9f</color>
+    <color name="black_ce">#cecece</color>
+    <color name="gray_a0">#a0a0a0</color>
+    <color name="gray_f3">#f3f3f3</color>
+    <color name="black_1f">#1f1f1f</color>
+    <color name="green_83">#83a36e</color>
+    <color name="blue_00">#000033</color>
+    <color name="color_EDEDED">#ededed</color>
+    <!--二维码扫描	 -->
+    <color name="viewfinder_frame">#ff000000</color>
+    <color name="viewfinder_laser">#ffff0000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#b0000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+
+    <color name="province_line_border">#C7C7C7</color>
+</resources>

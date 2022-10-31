@@ -1,0 +1,81 @@
+package org.cqmusician.exam.ui;
+
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+
+import org.cqmusician.exam.R;
+import org.cqmusician.exam.base.BaseBackAct;
+import org.cqmusician.exam.bean.ExamInfo;
+import org.cqmusician.exam.http.Api;
+import org.cqmusician.exam.http.ListCallback;
+import org.cqmusician.exam.http.ObjCallback;
+import org.cqmusician.exam.http.URLS;
+import org.cqmusician.exam.view.dialog.ClickListener;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2018/3/22.
+ */
+
+public class EditTextNumberAct extends BaseBackAct implements View.OnClickListener {
+
+    EditText et_width;
+    String sessionId;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.act_edit_textnumber);
+        addNavBtn();
+        setTitle("请输入准考证号");
+
+        sessionId =getIntent().getExtras().getString("sessionId");
+
+        initView();
+    }
+
+    private void initView() {
+
+        et_width = (EditText) findViewById(R.id.et_width);
+        findViewById(R.id.bt_textsave).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        String textNumber = et_width.getText().toString().trim();
+
+        if(TextUtils.isEmpty(textNumber)){
+            bd.toastFailed("请输入准考证");
+            return;
+        }
+
+        new Api(this, URLS.generateUrl(URLS.GET_STUDENT_BY_NUMBER))
+                .add("testNumber",textNumber)
+                .add("sessionId",sessionId)
+                .post(new ObjCallback<ExamInfo>() {
+                    @Override
+                    public void onSuccess(ExamInfo obj) {
+
+                        if(TextUtils.isEmpty(obj.getStuPhoto())){
+                            bd.getDialog().showCancle("请拍照后再参加考级","确定").setOnClickView(R.id.btn_mid, new ClickListener() {
+                                @Override
+                                public void onClick(View var1) {
+//                                    findViewById(R.id.bt_textsave).performClick();
+                                }
+                            }).setCancelable(false);
+                        }else {
+                            Bundle bundle = getIntent().getExtras();
+                            bundle.putSerializable("examInfo", obj);
+                            bd.jump(StuInfoAct.class, bundle);
+                            bd.back();
+                        }
+                    }
+                }, "正在获取考试信息");
+
+
+    }
+}

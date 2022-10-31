@@ -1,0 +1,373 @@
+package org.daomingedu.onecpexam.ui;
+
+import android.app.Dialog;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.tabs.TabLayout;
+import com.iflytek.cloud.RecognizerListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.SpeechUtility;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+
+import org.daomingedu.onecpexam.R;
+import org.daomingedu.onecpexam.base.BaseBackAct;
+import org.daomingedu.onecpexam.base.Constant;
+import org.daomingedu.onecpexam.base.MyApp;
+import org.daomingedu.onecpexam.bean.CommentType;
+import org.daomingedu.onecpexam.bean.QueryStudentInfo;
+import org.daomingedu.onecpexam.bean.SampleComment;
+import org.daomingedu.onecpexam.http.Api;
+import org.daomingedu.onecpexam.http.ListCallback;
+import org.daomingedu.onecpexam.http.ObjCallback;
+import org.daomingedu.onecpexam.http.URLS;
+import org.daomingedu.onecpexam.ui.adapter.SampleCommentAdapter;
+import org.daomingedu.onecpexam.utils.JsonParser;
+import org.daomingedu.onecpexam.utils.Log;
+import org.daomingedu.onecpexam.view.SampleCoverVideo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * Created by jianhongxu on 3/23/21
+ * Description
+ */
+public class SubTestActivity extends BaseBackAct implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
+
+    private QueryStudentInfo studentInfo;
+
+    private List<CommentType> commentTypes = new ArrayList<>();
+    private List<SampleComment> sampleComments = new ArrayList<>();
+    private SampleCommentAdapter adapter;
+
+    private ImageView iv_sound;
+    private Dialog dialog;
+    private EditText et_attend_comment;
+
+    private SpeechRecognizer mIat;
+
+    TabLayout tb_title;
+    private RecyclerView lv_sample;
+
+
+    private SampleCoverVideo sampleCoverVideo;
+
+
+    private MediaPlayer mediaPlayer = new MediaPlayer();
+    // 用HashMap存储听写结果
+    private RecognizerListener mRecognizerListener = new RecognizerListener() {
+        @Override
+        public void onVolumeChanged(int i, byte[] bytes) {
+            if (i <= 5) {
+                iv_sound.setImageResource(R.mipmap.sound0);
+            } else if (i <= 10) {
+                iv_sound.setImageResource(R.mipmap.sound1);
+            } else if (i <= 15) {
+                iv_sound.setImageResource(R.mipmap.sound2);
+            } else if (i <= 20) {
+                iv_sound.setImageResource(R.mipmap.sound3);
+            } else if (i <= 25) {
+                iv_sound.setImageResource(R.mipmap.sound4);
+            } else iv_sound.setImageResource(R.mipmap.sound5);
+        }
+
+        @Override
+        public void onBeginOfSpeech() {
+
+        }
+
+        @Override
+        public void onEndOfSpeech() {
+            dialog.dismiss();
+        }
+
+        @Override
+        public void onResult(RecognizerResult recognizerResult, boolean b) {
+            printResult(recognizerResult);
+            if (b) {
+                dialog.dismiss();
+            }
+        }
+
+        @Override
+        public void onError(SpeechError speechError) {
+
+        }
+
+        @Override
+        public void onEvent(int i, int i1, int i2, Bundle bundle) {
+
+        }
+    };
+
+    /**
+     * 打印结果
+     *
+     * @param results
+     */
+    private void printResult(RecognizerResult results) {
+        String text = JsonParser.parseIatResult(results.getResultString());
+
+        et_attend_comment.append(text);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.act_sub_test);
+
+        setTitle("评测");
+        addNavBtn();
+
+        initDialog();
+
+        studentInfo = (QueryStudentInfo) getIntent().getSerializableExtra(Constant.TEST_STUDENT_INFO_EXTRA);
+
+        sampleCoverVideo = (SampleCoverVideo) findViewById(R.id.scv_player_sub_test);
+
+
+        GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
+        GSYVideoManager.onPause();
+        gsyVideoOptionBuilder
+                .setIsTouchWiget(false)
+                .setUrl(studentInfo.getPath())
+                .setCacheWithPlay(false)
+                .setRotateViewAuto(true)
+                .setLockLand(true)
+                .setPlayTag(TAG)
+                .setShowFullAnimation(true)
+                .setNeedLockFull(true)
+                //.setPlayPosition(position)
+                .setVideoAllCallBack(new GSYSampleCallBack() {
+                    @Override
+                    public void onPrepared(String url, Object... objects) {
+                        super.onPrepared(url, objects);
+                    }
+
+                    @Override
+                    public void onQuitFullscreen(String url, Object... objects) {
+                        super.onQuitFullscreen(url, objects);
+                    }
+
+                    @Override
+                    public void onPlayError(String url, Object... objects) {
+                        super.onPlayError(url, objects);
+                        GSYVideoManager.onPause();
+                        gsyVideoOptionBuilder
+                                .setUrl(studentInfo.getTransPath())
+                                .setIsTouchWiget(false)
+                                .setCacheWithPlay(false)
+                                .setRotateViewAuto(true)
+                                .setLockLand(true)
+                                .setPlayTag(TAG)
+                                .setShowFullAnimation(true)
+                                .setNeedLockFull(true)
+                                .build(sampleCoverVideo);
+                        sampleCoverVideo.play();
+                    }
+
+                    @Override
+                    public void onEnterFullscreen(String url, Object... objects) {
+                        super.onEnterFullscreen(url, objects);
+                        //SampleCoverVideo scvPlayer = helper.getView(R.id.scv_player);
+                        //scvPlayer.getCurrentPlayer().getTitleTextView().setText((String)objects[0]);
+
+                    }
+                }).build(sampleCoverVideo);
+
+        sampleCoverVideo.play();
+
+        et_attend_comment = (EditText) findViewById(R.id.et_attend_comment);
+
+
+        /**
+         * 提交成绩点击事件
+         */
+        findViewById(R.id.bt_confirm).setOnClickListener(this);
+
+
+        /**
+         * 初始化讯飞语音
+         */
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5874c9be");
+        mIat = SpeechRecognizer.createRecognizer(SubTestActivity.this, null);
+        setParam();
+
+        tb_title = (TabLayout) findViewById(R.id.tb_title);
+
+        /**
+         * 初始化listview
+         */
+        lv_sample = (RecyclerView) findViewById(R.id.lv_sample);
+
+        commentTypes = ((MyApp) getApplication()).getSampleCommentList();
+        getSample();
+
+
+        ImageView iv_record = (ImageView) findViewById(R.id.iv_record);
+
+        iv_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIat.startListening(mRecognizerListener);
+                dialog.show();
+            }
+        });
+    }
+
+    private void getSample() {
+        new Api(this, URLS.generateUrl(URLS.GET_COMMENT))
+                .post(new ListCallback<CommentType>() {
+                    @Override
+                    public void onSuccess(List<CommentType> list) {
+                        commentTypes = list;
+                        initSample();
+                        ((MyApp) getApplication()).setSampleCommentList(list);
+                    }
+                });
+    }
+
+    private void initSample() {
+        if (commentTypes == null || commentTypes.size() == 0) return;
+        sampleComments.addAll(commentTypes.get(0).getTestCommentList());
+        adapter = new SampleCommentAdapter(R.layout.item_sample, sampleComments);
+        adapter.setOnItemClickListener(SubTestActivity.this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        lv_sample.setLayoutManager(layoutManager);
+        lv_sample.setAdapter(adapter);
+
+
+        for (CommentType c : commentTypes) {
+            tb_title.addTab(tb_title.newTab().setText(c.getTypeName()));
+        }
+
+        tb_title.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.e(tab.getText());
+                sampleComments.clear();
+                sampleComments.addAll(commentTypes.get(tab.getPosition()).getTestCommentList());
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    /**
+     * 语音输入参数设置
+     */
+    public void setParam() {
+        // 清空参数
+        mIat.setParameter(SpeechConstant.PARAMS, null);
+
+        // 设置听写引擎
+        mIat.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
+        // 设置返回结果格式
+        mIat.setParameter(SpeechConstant.RESULT_TYPE, "json");
+        // 设置语言
+        mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        // 设置语言区域
+        mIat.setParameter(SpeechConstant.ACCENT, "mandarin ");
+
+        // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
+        mIat.setParameter(SpeechConstant.VAD_BOS, "10000");
+
+        // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
+        mIat.setParameter(SpeechConstant.VAD_EOS, "10000");
+
+        // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
+        mIat.setParameter(SpeechConstant.ASR_PTT, "1");
+    }
+
+
+    private void initDialog() {
+        dialog = new Dialog(SubTestActivity.this, R.style.Dialog);
+        dialog.setContentView(R.layout.dialog_speak);
+        dialog.setCancelable(false);
+        iv_sound = (ImageView) dialog.findViewById(R.id.iv_sound);
+        Button bt_cancel = (Button) dialog.findViewById(R.id.bt_cancel);
+        Button bt_confirm = (Button) dialog.findViewById(R.id.bt_finish);
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mIat.stopListening();
+                dialog.dismiss();
+            }
+        });
+        bt_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mIat.stopListening();
+                dialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        String attendScore = ((EditText) findViewById(R.id.edScore)).getText().toString();
+        if (TextUtils.isEmpty(attendScore)) {
+            bd.toastFailed("请输入分数");
+            return;
+        }
+
+        if (0 > Integer.parseInt(attendScore) || Integer.parseInt(attendScore) > 100) {
+            bd.toastFailed("请输入0-100区间的分数");
+            return;
+        }
+        String attendComment = et_attend_comment.getText().toString();
+        if(TextUtils.isEmpty(attendComment)){
+            bd.toastFailed("请输入评语");
+            return;
+        }
+
+        new Api(this,URLS.generateUrl(URLS.SAVE_TEST_RESULT))
+                .add("sessionId",MyApp.getTeacher().getSessionId())
+                .add("testSignResultId",studentInfo.getTestSignResultId())
+                .add("attendScore",attendScore)
+                .add("attendComment",attendComment)
+                .post(new ObjCallback<Object>() {
+                    @Override
+                    public void onSuccess(Object obj){
+                        bd.toastSuccess("提交成功");
+                        finish();
+                    }
+
+
+                },"正在提交评论");
+
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        et_attend_comment.append(sampleComments.get(position).getContent());
+        et_attend_comment.setSelection(et_attend_comment.length());
+    }
+}

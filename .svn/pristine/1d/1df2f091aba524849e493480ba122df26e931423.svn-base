@@ -1,0 +1,56 @@
+package org.cqmusician.exam.ui.adapter;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import org.cqmusician.exam.R;
+import org.cqmusician.exam.base.CommonAdapter;
+import org.cqmusician.exam.base.ViewHolder;
+import org.cqmusician.exam.bean.TestRoomStudent;
+
+import java.util.List;
+
+/**
+ * Created by qin.
+ */
+
+public class StudentListAdapter extends CommonAdapter<TestRoomStudent> {
+    public StudentListAdapter(Context context, List<TestRoomStudent> list) {
+        super(context, list, R.layout.item_test_student);
+    }
+
+    @Override
+    public void getView(ViewHolder holder, TestRoomStudent data, int pos) {
+        holder.setText(R.id.tv_name,data.getStudentName());
+        holder.setText(R.id.tv_major,"考试专业：" + data.getMajorName());
+        holder.setText(R.id.tv_major_lvl,"专业等级：" + data.getMajorLevelName());
+        holder.setText(R.id.tv_major_number,"准考证号："+data.getTestNumber());
+        holder.setText(R.id.tv_major_score,"考试得分："+data.getMajorScore());
+        TextView tv_state = holder.getView(R.id.tv_state);
+        ImageView imageView = holder.getView(R.id.iv_head);
+        Glide.with(mContext).load(data.getPhotoImg()).into(imageView);
+        tv_state.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+        //状态  0 未考试  1没有打成绩  2已经完成
+        switch (data.getStatus()){
+            case "0":
+               tv_state.setTextColor(mContext.getResources().getColor(R.color.black_1f));
+                tv_state.setText("未考试");
+                break;
+            case "1":
+                tv_state.setTextColor(mContext.getResources().getColor(R.color.black_1f));
+                Drawable drawable = mContext.getResources().getDrawable(R.mipmap.warn);
+                tv_state.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
+                tv_state.setText("没有打成绩");
+                break;
+            case "2":
+                tv_state.setTextColor(mContext.getResources().getColor(R.color.gray_a0));
+                tv_state.setText("已考完");
+                break;
+
+        }
+    }
+}

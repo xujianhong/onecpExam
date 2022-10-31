@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvMarkName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="节奏"
+            android:textSize="@dimen/sub_test_font_big"
+            android:textColor="@color/black_1f" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/asSelect"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+
+            android:theme="@style/AppTheme"/>
+    </LinearLayout>
+</LinearLayout>

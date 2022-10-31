@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">壹测评评测端</string>
+
+    <string name="loading">加载中&#8230;</string>
+    <string name="input_code">请输入密码</string>
+    <string name="input_phone">请输入电话号码</string>
+    <string name="login">登陆</string>
+    <string name="illegal_phone">请输入正确的手机号码</string>
+    <string name="scan">扫描准考证</string>
+    <string name="student">我的班级</string>
+    <string name="logout">退出登陆</string>
+    <string name="notice">温馨提示：确认好学生信息再开始评测哟</string>
+    <string name="begin_assessment">开始评测</string>
+    <string name="id">身份证</string>
+    <string name="birthday">出生年月：</string>
+    <string name="nation_id">民族</string>
+    <string name="place_of_origin">籍贯</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

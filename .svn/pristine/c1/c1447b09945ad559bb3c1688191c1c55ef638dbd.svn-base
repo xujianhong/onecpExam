@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:gravity="center_vertical">
+    <ImageView
+        android:id="@+id/iv_head"
+        android:scaleType="centerCrop"
+        tools:src="@mipmap/test_head"
+        android:layout_width="72dp"
+        android:layout_height="88dp" />
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black_1f"
+            android:textSize="@dimen/main_font_big"
+            tools:text="小明"
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="3dp"
+            android:textColor="@color/black_9e"
+            android:textSize="@dimen/main_font_middle"
+            tools:text="考试专业：刚琴"
+            android:id="@+id/tv_major"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="@color/black_9e"
+            android:layout_marginTop="3dp"
+            android:textSize="@dimen/main_font_middle"
+            tools:text="专业等级：六级"
+            android:id="@+id/tv_major_lvl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="@color/black_9e"
+            android:layout_marginTop="3dp"
+            android:textSize="@dimen/main_font_middle"
+            tools:text="准考证号：xxxxxx"
+            android:id="@+id/tv_major_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textColor="@color/black_9e"
+            android:layout_marginTop="3dp"
+            android:textSize="@dimen/main_font_middle"
+            tools:text="考试得分：xxxxxx"
+            android:id="@+id/tv_major_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_state"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@mipmap/warn"
+        android:textColor="@color/black_1f"
+        android:textSize="@dimen/main_font_middle"
+        tools:text="未提交成绩"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
